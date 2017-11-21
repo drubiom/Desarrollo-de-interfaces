@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="753" height="584" minWidth="955" minHeight="600">
+	<fx:Style source="Practica3.css"/>
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			var logueado:int = 0;
+			var operador1:int = -1;
+			var operador2:int = -1;
+			var op:String = "0";
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				//si es igual el login
+				if(usuario.text == pass.text && usuario.text.length != 0 && pass.text.length != 0){
+					login();
+				}	
+				//else alertas
+				else{
+					if(usuario.text != pass.text){
+					Alert.show('Usuario y contraseña no coinciden', 'Error', mx.controls.Alert.OK);
+					}
+					if(usuario.text.length == 0 && pass.text.length == 0){
+						Alert.show('Campos vacios', 'Error', mx.controls.Alert.OK);
+					}
+				}
+			}
+			
+			public function exit_app(event:CloseEvent):void{
+				if(event.detail==Alert.OK)
+					logout();
+			}
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				Alert.show('Salir','¿Realmente desea salir?',Alert.OK|Alert.CANCEL,this,exit_app);
+				
+			}
+			
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				//resetea cateto1, cateto2 y hipotenusa
+				cateto1.text = "";
+				cateto2.text = "";
+				hipotenusa.text = "";
+			}
+			
+			protected function image1_clickHandler(event:MouseEvent):void
+			{
+				//calcula hipotenusa
+				var x:int = 0;
+				var y:int = 0;
+				var res:int = 0;
+				if(cateto1.text.length>0 && cateto2.text.length>0){
+					if(cateto1.text != "0" && cateto2.text != "0"){
+						x = parseInt(cateto1.text) * parseInt(cateto1.text);
+						y = parseInt(cateto2.text) * parseInt(cateto2.text);
+						res = x+y;
+						if(Math.sqrt(res)!=0)
+							hipotenusa.text = Math.sqrt(res).toFixed(6);
+						else
+							Alert.show('Algun número introducido es incorrecto', 'Error', mx.controls.Alert.OK);
+					}
+					else
+						Alert.show('Algún cateto es 0', 'Error', mx.controls.Alert.OK);
+				}
+				else
+					Alert.show('Falta cateto', 'Error', mx.controls.Alert.OK);
+			}
+			
+			protected function button4_clickHandler(event:MouseEvent):void
+			{
+				// pone un += 1 en la calculadora
+				if(pantalla.text != "0")
+					pantalla.text += 1;
+				else
+					pantalla.text = "1";
+			}
+			
+			protected function button5_clickHandler(event:MouseEvent):void
+			{
+				// guarda en operador 1, lo que hay en el cuadro de texto y pone el operador a +
+				operador1 = parseInt(pantalla.text);
+				pantalla.text = "";
+				op = "+";
+				solucion.text = operador1.toString() + " + ";
+			}
+			
+			protected function button6_clickHandler(event:MouseEvent):void
+			{
+				// guarda lo que hay en el cuadro en operador 2 y ejecuta el calculo
+				operador2 = parseInt(pantalla.text);
+				if(operador1 == 0 && operador2 == 0 && op == "/"){
+					Alert.show('Imagínate que tienes cero galletas y las repartes entre tus cero amigos. ¿Cuántas galletas le tocan a cada amigo? No tiene sentido. ' +
+						'¿Lo ves? Así que el Monstruo de las Galletas está triste porque no tiene galletas y tú estás triste porque no tienes amigos', 'Error', mx.controls.Alert.OK);
+				}
+				else if(operador2 == 0 && op == "/"){
+					Alert.show('Indeterminación!. No se puede dividir un numero entre 0', 'Error', mx.controls.Alert.OK);
+				}
+				else if(calcula() != -1){
+				solucion.text += operador2.toString();
+					if(op != "/")
+						pantalla.text = calcula().toString();
+					else
+						pantalla.text = calcula().toFixed(5).toString();
+				}
+				else
+					pantalla.text = "0";
+			}
+			
+			protected function activaCal_clickHandler(event:MouseEvent):void
+			{
+				if(logueado)
+					if(activaCal.selected){
+						panelCal.enabled=true;
+						panelPit.enabled=false;
+					}
+			}
+			
+			protected function activaPit_clickHandler(event:MouseEvent):void
+			{
+				if(logueado)
+					if(activaPit.selected){
+						panelPit.enabled=true;
+						panelCal.enabled=false;
+					}
+			}
+			
+			protected function button7_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 2;
+					else
+						pantalla.text = "2";
+			}
+			
+			protected function button8_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 3;
+					else
+						pantalla.text = "3";
+				
+			}
+			
+			protected function button9_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 4;
+					else
+						pantalla.text = "4";
+				
+			}
+			
+			protected function button10_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 5;
+					else
+						pantalla.text = "5";
+				
+			}
+			
+			protected function button11_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 6;
+					else
+						pantalla.text = "6";
+				
+			}
+			
+			protected function button12_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 7;
+					else
+						pantalla.text = "7";
+				
+			}
+			
+			protected function button13_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 8;
+					else
+						pantalla.text = "8";
+				
+			}
+			
+			protected function button14_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 9;
+					else
+						pantalla.text = "9";
+				
+			}
+			
+			protected function button15_clickHandler(event:MouseEvent):void
+			{
+				if(pantalla.text != "0")
+					pantalla.text += 0;
+					else
+						pantalla.text = "0";
+				
+			}
+			
+			protected function button16_clickHandler(event:MouseEvent):void
+			{
+				operador1 = -1;
+				operador2 = -1;
+				op = "0";
+				pantalla.text = "0";
+				solucion.text = "";
+			}
+			
+			protected function button17_clickHandler(event:MouseEvent):void
+			{
+				operador1 = parseInt(pantalla.text);
+				pantalla.text = "";
+				op = "-";
+				solucion.text = operador1.toString() + " - ";
+			}
+			
+			protected function button18_clickHandler(event:MouseEvent):void
+			{
+				operador1 = parseInt(pantalla.text);
+				pantalla.text = "";
+				op = "*";
+				solucion.text = operador1.toString() + " x ";
+				
+			}
+			
+			protected function button19_clickHandler(event:MouseEvent):void
+			{
+				operador1 = parseInt(pantalla.text);
+				pantalla.text = "";
+				op = "/";
+				solucion.text = operador1.toString() + " / ";
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<s:Panel x="135" y="53" width="265" height="162" title="Acceso">
+		<s:TextInput id="usuario" x="12" y="11" width="139" height="29" fontWeight="normal"
+					 prompt="Login"/>
+		<s:TextInput id="pass" x="11" y="47" width="139" height="29" displayAsPassword="true"
+					 fontWeight="normal" prompt="Password"/>
+		<s:Button id="botonLogin" x="48" y="86" width="78" height="31" label="Login"
+				  click="button1_clickHandler(event)"/>
+		<s:Button id="botonLogout" x="140" y="87" width="81" height="30" label="Logout"
+				  click="button2_clickHandler(event)" enabled="false"/>
+		<s:Label x="168" y="10" fontWeight="normal" text="Activar:"/>
+		<s:RadioButton id="activaCal" x="166" y="31" label="Calculadora"
+					   click="activaCal_clickHandler(event)" fontWeight="normal" groupName="g1"
+					   selected="true"/>
+		<s:RadioButton id="activaPit" x="166" y="54" label="Pitágoras"
+					   click="activaPit_clickHandler(event)" fontWeight="normal" groupName="g1"/>
+	</s:Panel>
+	<s:Panel id="panelCal" x="404" y="53" width="237" height="332" enabled="false"
+			 title="Calculadora Sencilla">
+		<s:TextInput id="solucion" x="7" y="3" width="219" height="20" editable="false"
+					 enabled="false" textAlign="right"/>
+		<s:TextInput id="pantalla" x="7" y="28" width="219" height="39" enabled="false"
+					 fontFamily="Courier New" fontSize="26" fontStyle="normal" prompt="0"
+					 textAlign="right"/>
+		<s:Button x="7" y="72" width="53" height="53" label="1" click="button4_clickHandler(event)"
+				  fontSize="30" fontWeight="normal"/>
+		<s:Button x="63" y="72" width="53" height="53" label="2" click="button7_clickHandler(event)"
+				  fontSize="30" fontWeight="normal"/>
+		<s:Button x="118" y="72" width="53" height="53" label="3" click="button8_clickHandler(event)"
+				  fontSize="30" fontWeight="normal"/>
+		<s:Button x="173" y="72" width="53" height="53" label="+" click="button5_clickHandler(event)"
+				  fontSize="30" fontWeight="normal"/>
+		<s:Button x="7" y="128" width="53" height="53" label="4" click="button9_clickHandler(event)"
+				  fontSize="30" fontWeight="normal"/>
+		<s:Button x="63" y="128" width="53" height="53" label="5"
+				  click="button10_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+		<s:Button x="118" y="128" width="53" height="53" label="6"
+				  click="button11_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+		<s:Button x="173" y="128" width="53" height="53" label="-"
+				  click="button17_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+		<s:Button x="8" y="183" width="53" height="53" label="7" click="button12_clickHandler(event)"
+				  fontSize="30" fontWeight="normal"/>
+		<s:Button x="63" y="183" width="53" height="53" label="8"
+				  click="button13_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+		<s:Button x="118" y="183" width="53" height="53" label="9"
+				  click="button14_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+		<s:Button x="173" y="183" width="53" height="53" label="X"
+				  click="button18_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+		<s:Button x="8" y="239" width="53" height="53" label="C" click="button16_clickHandler(event)"
+				  fontSize="30" fontWeight="normal"/>
+		<s:Button x="64" y="239" width="53" height="53" label="0"
+				  click="button15_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+		<s:Button x="118" y="239" width="53" height="53" label="="
+				  click="button6_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+		<s:Button x="173" y="239" width="53" height="53" label="/"
+				  click="button19_clickHandler(event)" fontSize="30" fontWeight="normal"/>
+	</s:Panel>
+	<s:Panel id="panelPit" x="135" y="223" width="265" height="162" borderVisible="true"
+			 dropShadowVisible="true" enabled="false" fontSize="12" title="Teorema de Pitágoras">
+		<s:Image x="1" y="27" width="144" height="91" backgroundAlpha="1.0"
+				 click="image1_clickHandler(event)" scaleMode="letterbox" smooth="true"
+				 smoothingQuality="high" source="assets/Captura.PNG"/>
+		<s:TextInput id="cateto1" x="147" y="5" width="110" height="35" fontSize="16"
+					 fontWeight="normal" prompt="Cateto1"/>
+		<s:TextInput id="cateto2" x="147" y="42" width="110" height="35" fontSize="16"
+					 fontWeight="normal" prompt="Cateto2"/>
+		<s:TextInput id="hipotenusa" x="147" y="80" width="110" height="35" editable="false"
+					 fontSize="16" fontWeight="normal" prompt="Hipotenusa"/>
+		<s:Button x="147" y="-25" width="106" height="18" label="Reiniciar"
+				  click="button3_clickHandler(event)" fontWeight="normal"/>
+	</s:Panel>
+	
+	<fx:Script>
+		<![CDATA[
+			function login():void
+			{
+				//si esta seleccionado calc -> enable cal else enable pit
+				if(activaCal.selected){
+					panelCal.enabled=true;
+				}
+				else if (activaPit.selected){
+					panelPit.enabled=true;
+				}
+				//y pone variable logueado a 1
+				logueado = 1;
+				//enable boton logout
+				botonLogout.enabled = true;
+				//disable boton login
+				botonLogin.enabled = false;
+				//disable user y pas
+				usuario.editable=false;
+				pass.editable = false;
+				
+			}
+			
+			function logout():void
+			{
+				//disable cal y pit
+				panelCal.enabled=false;
+				panelPit.enabled=false;
+				//y pone variable logueado a 0
+				logueado = 0;
+				//enable boton login
+				botonLogin.enabled = true;
+				//disable boton logout
+				botonLogout.enabled = false;
+				//enable user y pas
+				usuario.editable=true;
+				pass.editable = true;
+				operador1 = -1;
+				operador2 = -1;
+				op = "0";
+				pantalla.text = "0";
+				solucion.text = "";
+			}
+			function calcula ():Number
+			{
+				if(operador1 != -1 && operador2 !=-1){
+					switch (op){
+						case "+": return operador1 + operador2;
+							break;
+						case "-": return operador1 - operador2;
+							break;
+						case "*": return operador1 * operador2;
+							break;
+						case "/": return operador1 / operador2;
+							break;
+						default: Alert.show('Error', 'Error', mx.controls.Alert.OK);
+							break;
+					}
+				}
+				else{
+					Alert.show('Falta algún número', 'Error', mx.controls.Alert.OK);
+					operador1 = -1;
+					operador2 = -1;
+					op = "0";
+					pantalla.text = "";
+					solucion.text = "";
+				}
+				return -1;
+			}
+		]]>
+	</fx:Script>
+</s:Application>

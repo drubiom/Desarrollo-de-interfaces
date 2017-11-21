@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	 
+	<s:Panel id="realiza" x="104" y="22" width="440" height="478" fontWeight="normal"
+			 title="Realiza tu Pedido">
+		<s:Label x="32" y="19" fontSize="15" text="Elige Pizza"/>
+		<s:ComboBox id="modelopizza" x="124" y="11" width="292"
+					change="combobox1_changeHandler(event)">
+			<mx:ArrayList>
+				<fx:String>New York (Jamón York, Champiñón)</fx:String>
+				<fx:String>TierraMar (Bacon, Atún)</fx:String>
+				<fx:String>RHCPeppers (Pimiento, Peperoni)</fx:String>
+				<fx:String>Margarita (Básica, a tu gusto)</fx:String>
+			</mx:ArrayList>
+		</s:ComboBox>
+		<s:Label x="32" y="51" fontSize="15" text="Añade Ingredientes (cada ingrediente extra 1€):"/>
+		<s:CheckBox id="jamon" x="32" y="75" label="Jamón York" click="jamon_clickHandler(event)"
+					fontSize="15"/>
+		<s:CheckBox id="champi" x="32" y="107" label="Champiñones" click="jamon_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="atun" x="33" y="139" label="Atún" click="atun_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="bacon" x="33" y="168" label="Bacon" click="bacon_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="pimiento" x="33" y="201" label="Pimiento" click="pimiento_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="peperoni" x="33" y="232" label="Peperoni" click="peperoni_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="serrano" x="159" y="232" label="Serrano" click="serrano_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="barbacoa" x="158" y="202" label="Barbacoa" click="barbacoa_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="ternera" x="158" y="169" label="Ternera" click="ternera_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="aceitunas" x="158" y="140" label="Aceitunas" click="aceitunas_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="pina" x="158" y="108" label="Piña" click="pina_clickHandler(event)" fontSize="15"/>
+		<s:CheckBox id="pollo" x="158" y="75" label="Pollo" click="pollo_clickHandler(event)" fontSize="15"/>
+		<s:List id="listaIngredientes" x="273" y="74" width="143" height="179">
+			<mx:ArrayList id="lista">
+			</mx:ArrayList>
+		</s:List>
+			
+		<s:Label x="34" y="269" width="145" fontSize="15"
+				 text="Tamaño de la pizza:"/>
+		<s:RadioButton id="mediana" x="34" y="292" label="Mediana" enabled="false" groupName="tamaño"
+					   selected="true"/>
+		<s:RadioButton id="grande" x="118" y="292" label="Grande" enabled="false" groupName="tamaño"/>
+		<s:Label x="33" y="322" width="145" fontSize="15"
+				 text="Elige tipo de masa"/>
+		<s:TextInput id="masaNormal" x="33" y="345" width="67" click="masaNormal_clickHandler(event)"
+					 editable="false" enabled="false" text="NORMAL"/>
+		<s:TextInput id="masaFina" x="115" y="345" width="49" click="masaFina_clickHandler(event)" editable="false" enabled="false"
+					 text="FINA"/>
+		<s:Label x="33" y="384" width="145" fontSize="15"
+				 text="Tipo del pedido:"/>
+		<s:RadioButton id="local" x="33" y="411" label="Local" click="local_clickHandler(event)"
+					   enabled="false" groupName="tipopedido" selected="true"/>
+		<s:RadioButton id="domicilio" x="99" y="411" label="A domicilio" click="domicilio_clickHandler(event)" enabled="false"
+					   groupName="tipopedido"/>
+		<s:Label x="197" y="269" width="208" fontSize="15"
+				 text="Datos de entrega pedido:"/>
+		<mx:DateField id="fecha" x="197" y="292" width="138" change="fecha_changeHandler(event)"
+					  enabled="false" formatString="DD-MM-YYYY"/>
+		<s:ComboBox id="hora" x="343" y="292" width="73" change="hora_changeHandler(event)"
+					enabled="false" prompt="Hora">
+			<mx:ArrayList>
+				<fx:String>14:00</fx:String>
+				<fx:String>15:00</fx:String>
+				<fx:String>21:00</fx:String>
+				<fx:String>22:00</fx:String>
+			</mx:ArrayList>
+		</s:ComboBox>
+		<s:Label x="197" y="328" width="208" fontSize="15"
+				 text="Datos de contacto del cliente:"/>
+		<s:TextInput id="contacto" x="197" y="351" width="219" enabled="false" fontSize="15"
+					 prompt="Dirección y nº teléfono"/>
+		<s:Button id="importe" x="198" y="401" width="122" label="Importe total"
+				  click="importe_clickHandler(event)" enabled="false"/>
+		<s:TextInput id="campoPrecio" x="327" y="400" width="89" enabled="false"/>
+	</s:Panel>
+	<s:Panel id="historial" x="553" y="22" width="241" height="478" enabled="false"
+			 fontWeight="normal" title="Historial de Pedidos">
+		<s:TextArea id="areaPedidos" x="9" y="39" width="220" height="390" editable="false"/>
+		<s:Button x="10" y="10" width="217" height="20" label="Nuevo Pedido"
+				  click="button1_clickHandler(event)"/>
+	</s:Panel>
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.CalendarLayoutChangeEvent;
+			import spark.events.IndexChangeEvent;
+			var precio:int = 0;
+			
+			protected function combobox1_changeHandler(event:IndexChangeEvent):void
+			{
+				switch (modelopizza.selectedIndex){
+					case 0: 
+						reseteaIngredientes();
+						jamon.selected = true;
+						champi.selected = true;
+						jamon.enabled = false;
+						champi.enabled = false;
+						activaTamano();
+						break;
+					case 1:
+						reseteaIngredientes();
+						bacon.selected = true;
+						atun.selected = true;
+						bacon.enabled = false;
+						atun.enabled = false;
+						activaTamano();
+						break;
+					case 2:
+						reseteaIngredientes();
+						pimiento.selected = true;
+						peperoni.selected = true;
+						pimiento.enabled = false;
+						peperoni.enabled = false;
+						activaTamano();
+						break;
+					case 3:
+						reseteaIngredientes();
+						activaTamano();
+						break;
+					default:
+						break;
+				}
+			}
+			function reseteaIngredientes(){
+				jamon.selected = false;
+				pollo.selected = false;
+				champi.selected = false;
+				pina.selected = false;
+				atun.selected = false;
+				aceitunas.selected = false;
+				bacon.selected = false;
+				ternera.selected = false;
+				pimiento.selected = false;
+				barbacoa.selected = false;
+				peperoni.selected = false;
+				serrano.selected = false;
+				jamon.enabled = true;
+				pollo.enabled = true;
+				champi.enabled = true;
+				pina.enabled = true;
+				atun.enabled = true;
+				aceitunas.enabled = true;
+				bacon.enabled = true;
+				ternera.enabled = true;
+				pimiento.enabled = true;
+				barbacoa.enabled = true;
+				peperoni.enabled = true;
+				serrano.enabled = true;
+			}
+			
+			protected function jamon_clickHandler(event:MouseEvent):void
+			{
+				if(jamon.selected)
+					lista.addItem("Jamón York");
+				else
+					lista.removeItem("Jamón York");
+			}
+			protected function pollo_clickHandler(event:MouseEvent):void
+			{
+				if(pollo.selected)
+					lista.addItem("Pollo");
+				else
+					lista.removeItem("Pollo");
+			}
+			protected function champi_clickHandler(event:MouseEvent):void
+			{
+				if(champi.selected)
+					lista.addItem("Champiñones");
+				else
+					lista.removeItem("Champiñones");
+			}
+			protected function pina_clickHandler(event:MouseEvent):void
+			{
+				if(pina.selected)
+					lista.addItem("Piña");
+				else
+					lista.removeItem("Piña");
+			}
+			protected function atun_clickHandler(event:MouseEvent):void
+			{
+				if(atun.selected)
+					lista.addItem("Atún");
+				else
+					lista.removeItem("Atún");
+			}
+			protected function aceitunas_clickHandler(event:MouseEvent):void
+			{
+				if(aceitunas.selected)
+					lista.addItem("Aceitunas");
+				else
+					lista.removeItem("Aceitunas");
+			}
+			protected function bacon_clickHandler(event:MouseEvent):void
+			{
+				if(bacon.selected)
+					lista.addItem("Bacon");
+				else
+					lista.removeItem("Bacon");
+			}
+			protected function ternera_clickHandler(event:MouseEvent):void
+			{
+				if(ternera.selected)
+					lista.addItem("Ternera");
+				else
+					lista.removeItem("Ternera");
+			}
+			protected function pimiento_clickHandler(event:MouseEvent):void
+			{
+				if(pimiento.selected)
+					lista.addItem("Pimiento");
+				else
+					lista.removeItem("Pimiento");
+			}
+			protected function barbacoa_clickHandler(event:MouseEvent):void
+			{
+				if(barbacoa.selected)
+					lista.addItem("Barbacoa");
+				else
+					lista.removeItem("Barbacoa");
+			}
+			protected function peperoni_clickHandler(event:MouseEvent):void
+			{
+				if(peperoni.selected)
+					lista.addItem("Peperoni");
+				else
+					lista.removeItem("Peperoni");
+			}
+			protected function serrano_clickHandler(event:MouseEvent):void
+			{
+				if(serrano.selected)
+					lista.addItem("Serrano");
+				else
+					lista.removeItem("Serrano");
+			}
+			function activaTamano(){
+				grande.enabled = true;
+				mediana.enabled = true;
+				masaNormal.enabled = true;
+				masaFina.enabled = true;
+			}
+			
+			protected function masaNormal_clickHandler(event:MouseEvent):void
+			{
+				masaFina.setStyle("contentBackgroundColor","white");
+				masaNormal.setStyle("contentBackgroundColor","yellow");
+				local.enabled = true;
+				domicilio.enabled = true;
+				fecha.enabled = true;
+			}
+			protected function masaFina_clickHandler(event:MouseEvent):void
+			{
+				masaNormal.setStyle("contentBackgroundColor","white");
+				masaFina.setStyle("contentBackgroundColor","yellow");
+				local.enabled = true;
+				domicilio.enabled = true;
+				fecha.enabled = true;
+			}
+			
+			protected function local_clickHandler(event:MouseEvent):void
+			{
+				contacto.enabled = false;
+				contacto.text ="";
+			}
+			protected function domicilio_clickHandler(event:MouseEvent):void
+			{
+				contacto.enabled = true;
+			}
+			
+			protected function fecha_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				var actual:Date = new Date;
+				var selecFecha: Date = fecha.selectedDate;
+				if(actual.fullYear <= selecFecha.fullYear && actual.month <= selecFecha.month && actual.date <= selecFecha.date){
+					hora.enabled = true;
+				}
+				else{
+					//alerta
+					Alert.show('La fecha no puede ser anterior a hoy', 'Error', mx.controls.Alert.OK);
+					fecha.selectedDate = null;
+					//disable importe y hora
+					importe.enabled = false;
+					hora.enabled = false;
+					hora.selectedIndex = -1;
+				}
+			}
+			
+			protected function hora_changeHandler(event:IndexChangeEvent):void
+			{
+				importe.enabled = true;
+			}
+			
+			public function calcula(event:CloseEvent):void{
+				if(event.detail==Alert.OK)
+					if(modelopizza.selectedIndex == 3)
+						precio = 5;
+					else 
+						precio = 7;
+				if (grande.selected)
+					precio +=3;
+				precio += lista.length;
+				historial.enabled = true;
+				realiza.enabled = false;
+				campoPrecio.text = precio.toString();
+				areaPedidos.text += fecha.text+"->"+precio.toString()+"€\n";
+			}
+			
+			protected function importe_clickHandler(event:MouseEvent):void
+			{
+				Alert.show('¿Desea calcular el importe total?','Calcular',Alert.OK|Alert.CANCEL,this,calcula);
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				reseteaIngredientes();
+				modelopizza.selectedIndex = -1;
+				historial.enabled = false;
+				realiza.enabled = true;
+				precio = 0;
+				mediana.enabled = false;
+				mediana.selected = true;
+				grande.enabled = false;
+				grande.selected = false;
+				masaFina.enabled = false;
+				masaNormal.enabled = false;
+				masaFina.setStyle("contentBackgroundColor","white");
+				masaNormal.setStyle("contentBackgroundColor","white");
+				fecha.enabled = false;
+				fecha.selectedDate = null;
+				hora.enabled = false;
+				hora.selectedIndex = -1;
+				contacto.enabled = false;
+				contacto.text = "";
+				importe.enabled = false;
+				campoPrecio.text = "";
+				local.enabled = false;
+				local.selected = true;
+				domicilio.enabled = false;
+				domicilio.selected = false;
+				lista.removeAll();
+			}
+			
+		]]>
+	</fx:Script>
+</s:Application>
