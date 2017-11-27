@@ -1,0 +1,10 @@
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\bin\Debug\Practica 4.exe.config
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\obj\Debug\Practica 4.exe
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\obj\Debug\Practica 4.pdb
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\bin\Debug\Practica 4.exe
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\bin\Debug\Practica 4.pdb
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\obj\Debug\Practica 4.csprojResolveAssemblyReference.cache
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\obj\Debug\Practica_4.Form1.resources
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\obj\Debug\Practica_4.Properties.Resources.resources
+C:\Users\CFGS\documents\visual studio 2015\Projects\Practica 4\Practica 4\obj\Debug\Practica 4.csproj.GenerateResource.Cache
+C:\Users\CFGS\Documents\Visual Studio 2015\Projects\Practica 4\Practica 4\obj\Debug\Practica_4.Login.resources
